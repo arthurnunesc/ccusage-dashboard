@@ -1,0 +1,25 @@
+{
+  "name": "ccusage-dashboard",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "start": "bun src/server.js",
+    "dev": "bun --watch src/server.js",
+    "typecheck": "tsc --noEmit",
+    "lint": "biome check .",
+    "test": "bun test tests/unit",
+    "test:contract": "bun test tests/contract",
+    "test:e2e": "playwright test",
+    "check": "bun run typecheck && bun run lint && bun run test && bun run test:contract"
+  },
+  "dependencies": {
+    "ccusage": "20.0.31"
+  },
+  "devDependencies": {
+    "typescript": "7.0.2",
+    "@types/bun": "1.4.3",
+    "@biomejs/biome": "2.5.15",
+    "@playwright/test": "1.64.0"
+  }
+}

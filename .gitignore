@@ -1,0 +1,14 @@
+node_modules/
+.env
+.env.*
+!.env.example
+*.local.json
+*.log
+usage*.json
+pricing-cache/
+coverage/
+test-results/
+playwright-report/
+.impeccable/review/
+.DS_Store
+.tmp/
