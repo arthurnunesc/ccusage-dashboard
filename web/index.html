@@ -1,0 +1,70 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Coding Agent Usage</title>
+    <link rel="stylesheet" href="/web/styles.css" />
+    <script type="module" src="/web/app.js"></script>
+  </head>
+  <body>
+    <!-- THESIS: A local usage ledger, not a billing portal or marketing page.
+    OWN-WORLD: Charcoal, slate rules, muted blue controls, system type, tabular data.
+    STORY: Read retained history, compare tool/model totals, refresh deliberately.
+    FIRST VIEWPORT: Compact heading and actions; six cards; monthly stacks; details below.
+    FORM: Brief-pinned developer-tool ledger; seed dd7a7567 cannot override the brief.
+    FINISH: unreviewed and undocumented is unfinished; this build ends with the finish review, the verdict, DESIGN.md, and every shipping raster carrying its provenance -->
+    <main>
+      <header class="page-header">
+        <div>
+          <h1>Coding Agent Usage</h1>
+          <p class="subtitle">Tokens and cost estimates from retained local agent history.</p>
+          <p id="status" role="status" aria-live="polite">Loading ccusage report…</p>
+        </div>
+        <div class="actions">
+          <label for="tool">Tool</label>
+          <select id="tool" disabled><option value="all">All tools</option></select>
+          <button id="refresh" type="button" disabled>Refresh</button>
+        </div>
+      </header>
+      <p id="scope-note" class="scope-note">Local history · ccusage 20.0.31 · UTC grouping · Costs are not invoices or subscription charges.</p>
+      <div id="error" role="alert" hidden><p id="error-message"></p><button id="retry" type="button">Retry</button></div>
+      <div id="warnings" role="status" hidden></div>
+      <div id="content" aria-busy="true">
+        <section id="cards" aria-label="Usage summary" class="cards"></section>
+        <p id="empty" class="empty" hidden>No usage for the selected tools. Check ccusage source discovery and retained logs.</p>
+        <section class="report-section" aria-labelledby="chart-heading">
+          <div class="section-heading">
+            <div><h2 id="chart-heading">Monthly usage</h2><p>Stacked by tool and model · UTC months</p></div>
+            <div class="toggle" role="group" aria-label="Chart metric">
+              <button id="tokens" type="button" aria-pressed="true">Token count</button>
+              <button id="dollars" type="button" aria-pressed="false">Dollar amount</button>
+            </div>
+          </div>
+          <div id="chart-region" class="chart-scroll" tabindex="0" aria-label="Monthly chart"></div>
+          <ul id="legend" class="legend" aria-label="Tool and model legend"></ul>
+        </section>
+        <section class="report-section" aria-labelledby="table-heading">
+          <div class="section-heading">
+            <div><h2 id="table-heading">Usage details</h2><p id="table-context">Tool and model totals</p></div>
+            <div class="toggle" role="group" aria-label="Table mode">
+              <button id="all-time" type="button" aria-pressed="true">All time</button>
+              <button id="per-month" type="button" aria-pressed="false">Per month</button>
+            </div>
+          </div>
+          <div id="table-region" class="table-scroll" tabindex="0" aria-label="Usage details table"></div>
+        </section>
+      </div>
+      <details class="help">
+        <summary>Data and compatibility notes</summary>
+        <p>Calls, Reasoning, provider identity, and exact recorded-versus-estimated pricing provenance are not provided by ccusage. A dash means unavailable, not zero.</p>
+        <p>Pricing source: ccusage auto: recorded or estimated. Unpriced-only rows show Unavailable; positive partial amounts are known subtotals. No amount here is an invoice or a subscription charge.</p>
+        <p>Unattributed usage reconciles exported model breakdowns to authoritative tool totals, including extra tokens ccusage does not classify. It is not reasoning.</p>
+        <p>Typical 30d values project lifetime totals over the inclusive span of observed UTC dates. Recent averages use today and the prior 29 UTC dates, divided by active dates (at least one). These differ from precise event-based lifetime averages.</p>
+        <p>Only local retained history is included. Deleted logs and other devices are not included. Pricing is offline by default; use CCUSAGE_OFFLINE=false only if you want ccusage to refresh prices.</p>
+      </details>
+      <footer>Powered by ccusage · Daily summaries, not account billing</footer>
+    </main>
+    <div id="tooltip" role="tooltip" hidden></div>
+  </body>
+</html>
