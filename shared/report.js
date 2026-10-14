@@ -287,11 +287,11 @@ function identityOrder(rows) {
  * while tool/model rows retain their authoritative normalized model categories.
  *
  * @param {DayUsage[]} days
- * @param {{ agent?: string, now?: Date }} [options]
+ * @param {{ agent?: string, allTools?: boolean, now?: Date }} [options]
  */
 export function calculateReport(
   days,
-  { agent = "all", now = new Date() } = {},
+  { agent = "all", allTools = agent === "all", now = new Date() } = {},
 ) {
   if (!Array.isArray(days)) throw new TypeError("days must be an array");
   if (!(now instanceof Date) || Number.isNaN(now.getTime()))
@@ -302,7 +302,7 @@ export function calculateReport(
     compareText,
   );
   const selected = checkedDays.filter(
-    ({ day }) => agent === "all" || day.agent === agent,
+    ({ day }) => allTools || day.agent === agent,
   );
   const selectedWithUsage = selected.filter(
     ({ totals }) => totals.totalTokens > 0 || totals.costUsd > 0,
@@ -551,6 +551,7 @@ export function calculateReport(
     observedCalendarDays,
     context: {
       selectedAgent: agent,
+      allTools,
       selectedDayEntries: selected.length,
       activeDayEntries: selectedWithUsage.length,
       monthCount: months.length,

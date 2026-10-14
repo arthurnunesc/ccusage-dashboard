@@ -209,6 +209,29 @@ test("fractional dollar scale, zero costs, and bounded long-label tooltips", asy
   await expect(tip).toBeHidden();
 });
 
+test("future all tool and hostile tool labels are distinct inert filters", async ({
+  page,
+  request,
+}) => {
+  const data = await (await request.get("/api/usage")).json();
+  const hostile = "<img src=x onerror=alert(1)> tool";
+  for (const day of data.days) {
+    if (day.agent === "claude") day.agent = "all";
+    if (day.agent === "pi:lab") day.agent = hostile;
+  }
+  await page.route("**/api/usage", (route) => route.fulfill({ json: data }));
+  await page.goto("/");
+  await page.getByLabel("Tool", { exact: true }).selectOption("all");
+  await expect(page.locator("#table-region tbody tr")).toHaveCount(2);
+  await expect(page.locator("#legend")).not.toContainText("codex");
+  await page.getByLabel("Tool", { exact: true }).selectOption(hostile);
+  await expect(page.locator("#table-region tbody tr")).toHaveCount(1);
+  await expect(page.locator("#table-region")).toContainText(hostile);
+  await expect(page.locator("#tool img, #table-region img")).toHaveCount(0);
+  await page.getByLabel("Tool", { exact: true }).selectOption("");
+  await expect(page.locator("#table-region tbody tr")).toHaveCount(5);
+});
+
 test("desktop/mobile screenshot batch and 200% zoom have no page overflow", async ({
   page,
 }) => {

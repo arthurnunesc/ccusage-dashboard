@@ -372,3 +372,12 @@ test("UTC year rollover and finite derived results", () => {
     calculateReport([day({ costUsd: Number.MAX_VALUE, models: [] })]),
   ).toThrow("Projected cost");
 });
+
+test("a real tool named all can be selected without the all-tools sentinel", () => {
+  const days = [day({ agent: "all" }), day({ agent: "claude" })];
+  expect(calculateReport(days).summary.allTime.totalTokens).toBe(200);
+  expect(
+    calculateReport(days, { agent: "all", allTools: false }).summary.allTime
+      .totalTokens,
+  ).toBe(100);
+});

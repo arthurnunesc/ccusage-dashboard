@@ -25,7 +25,10 @@ let busy = false;
 function render() {
   if (!snapshot) return;
   tooltip.hide();
-  const view = calculateReport(snapshot.days, { agent: tool.value });
+  const view = calculateReport(snapshot.days, {
+    agent: tool.value,
+    allTools: tool.value === "",
+  });
   element("status").textContent =
     `${snapshot.stale ? "Stale · " : ""}Generated ${new Date(snapshot.generatedAt).toLocaleString()}`;
   element("scope-note").textContent =
@@ -140,12 +143,12 @@ async function load(explicit = false) {
       );
     snapshot = json;
     const selected = tool.value;
-    tool.replaceChildren(new Option("All tools", "all"));
+    tool.replaceChildren(new Option("All tools", ""));
     for (const agent of calculateReport(snapshot?.days ?? []).tools)
       tool.append(new Option(agent, agent));
     tool.value = [...tool.options].some((option) => option.value === selected)
       ? selected
-      : "all";
+      : "";
     tool.disabled = false;
     render();
   } catch (error) {
