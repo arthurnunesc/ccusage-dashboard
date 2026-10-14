@@ -1,0 +1,82 @@
+{
+  "schemaVersion": 2,
+  "generatedAt": "2026-10-14T07:30:00.000Z",
+  "title": "Design System: Coding Agent Usage",
+  "extensions": {
+    "shadows": [
+      {
+        "name": "tooltip",
+        "value": "0 6px 20px rgb(0 0 0 / 35%)",
+        "purpose": "Separate transient values from the ledger."
+      }
+    ],
+    "motion": [],
+    "breakpoints": [
+      { "name": "narrow", "value": "700px" },
+      { "name": "very-small", "value": "300px" }
+    ]
+  },
+  "components": [
+    {
+      "name": "Button",
+      "kind": "button",
+      "refersTo": "button",
+      "description": "Native local action.",
+      "html": "<button class=\"ds-button\">Refresh</button>",
+      "css": ".ds-button { font: inherit; color: var(--text); background: var(--surface); border: 1px solid var(--rule); border-radius: 6px; min-height: 36px; padding: 6px 12px; cursor: pointer; } .ds-button:hover { background: var(--surface-hover); } .ds-button:focus-visible { outline: 2px solid var(--accent); outline-offset: 4px; }"
+    },
+    {
+      "name": "Tool selector",
+      "kind": "input",
+      "description": "Native tool filter.",
+      "html": "<label>Tool <select class=\"ds-select\"><option>All tools</option></select></label>",
+      "css": ".ds-select { font: inherit; color: var(--text); background: var(--surface); border: 1px solid var(--rule); border-radius: 6px; min-height: 36px; padding: 6px 12px; } .ds-select:hover { background: var(--surface-hover); } .ds-select:focus-visible { outline: 2px solid var(--accent); outline-offset: 4px; }"
+    },
+    {
+      "name": "Summary card",
+      "kind": "card",
+      "refersTo": "summary-card",
+      "description": "Metric with context, not a billing claim.",
+      "html": "<article class=\"ds-card\"><span class=\"ds-label\">All-Time Tokens</span><strong>—</strong><span class=\"ds-label\">No data</span></article>",
+      "css": ".ds-card { background: var(--surface); color: var(--text); border: 1px solid var(--rule); border-radius: 8px; padding: 18px 20px; } .ds-card strong { display: block; font-size: 28px; font-weight: 600; } .ds-label { color: var(--muted); font-size: 12px; }"
+    },
+    {
+      "name": "Estimate warning",
+      "kind": "custom",
+      "description": "Incomplete pricing or safe failure.",
+      "html": "<div class=\"ds-warning\">Some usage has missing pricing.</div>",
+      "css": ".ds-warning { border: 1px solid var(--rule); border-radius: 6px; padding: 12px 16px; color: var(--warning); }"
+    },
+    {
+      "name": "Tooltip",
+      "kind": "custom",
+      "description": "Exact values and explanations.",
+      "html": "<div class=\"ds-tooltip\">Not provided by ccusage</div>",
+      "css": ".ds-tooltip { max-width: 360px; padding: 10px 13px; border: 1px solid #71849c; border-radius: 6px; color: var(--text); background: #253145; box-shadow: 0 6px 20px rgb(0 0 0 / 35%); font-size: 12px; }"
+    }
+  ],
+  "narrative": {
+    "northStar": "Local usage ledger",
+    "overview": "The user brief fixes a restrained dark developer tool. Show data and its limits without decorative branding. Preserve familiar native controls and clear state.",
+    "keyCharacteristics": [
+      "Compact, readable data with tabular numbers.",
+      "Flat slate regions and consistent rules.",
+      "Names and values accompany chart colors."
+    ],
+    "rules": [
+      {
+        "name": "The Identity Rule",
+        "body": "Never use color alone to identify a tool or model.",
+        "section": "colors"
+      }
+    ],
+    "dos": [
+      "Do keep exact model/tool names available and safely rendered as text.",
+      "Do retain contrast and keyboard access across refresh and empty states."
+    ],
+    "donts": [
+      "Don't style estimates as authoritative bills.",
+      "Don't add marketing sections, remote fonts, animation, or new filters."
+    ]
+  }
+}
