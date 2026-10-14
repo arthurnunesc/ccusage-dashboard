@@ -8,9 +8,9 @@
     "dev": "bun --watch src/server.js",
     "typecheck": "tsc --noEmit",
     "lint": "biome check .",
-    "test": "bun test tests/unit",
-    "test:contract": "bun test tests/contract",
-    "test:e2e": "playwright test",
+    "test": "bun --no-env-file scripts/tests.js unit",
+    "test:contract": "bun --no-env-file scripts/tests.js contract",
+    "test:e2e": "bun --no-env-file scripts/tests.js e2e",
     "check": "bun run typecheck && bun run lint && bun run test && bun run test:contract"
   },
   "dependencies": {

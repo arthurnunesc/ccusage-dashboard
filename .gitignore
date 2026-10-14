@@ -4,7 +4,14 @@ node_modules/
 !.env.example
 *.local.json
 *.log
+*.jsonl
+!tests/fixtures/*.jsonl
 usage*.json
+ccusage.private*.json
+/reports/
+/logs/
+/cache/
+/tmp/
 pricing-cache/
 coverage/
 test-results/

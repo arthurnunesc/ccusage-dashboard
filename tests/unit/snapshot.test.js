@@ -50,9 +50,31 @@ test("close aborts owned operation and prohibits new refreshes", async () => {
       }),
   });
   const pending = cache.load();
-  const assertion = expect(pending).rejects.toThrow("cancelled");
+  // Attach a rejection handler before cancellation; assert after owned cleanup.
+  const result = pending.catch((error) => error);
   await Bun.sleep(1);
   await cache.close();
-  await assertion;
+  expect(await result).toEqual(new Error("cancelled"));
   await expect(cache.refresh()).rejects.toThrow("closed");
+});
+
+test("failed first scan leaves no cache and a later load can recover", async () => {
+  let calls = 0;
+  const cache = createSnapshotCache({
+    ttlMs: 100,
+    runner: async () => {
+      calls++;
+      if (calls === 1) throw new Error("unavailable");
+      return { generatedAt: "synthetic" };
+    },
+  });
+  try {
+    await expect(cache.load()).rejects.toThrow("unavailable");
+    expect(cache.peek()).toBeNull();
+    const loaded = await cache.load();
+    expect(loaded.stale).toBe(false);
+    expect(loaded.snapshot.generatedAt).toBe("synthetic");
+  } finally {
+    await cache.close();
+  }
 });

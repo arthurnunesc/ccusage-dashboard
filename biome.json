@@ -1,9 +1,10 @@
 {
   "$schema": "https://biomejs.dev/schemas/2.5.15/schema.json",
+  "vcs": { "enabled": true, "clientKind": "git", "useIgnoreFile": true },
   "files": {
     "includes": ["**", "!node_modules", "!.impeccable/review", "!bun.lock"]
   },
   "formatter": { "indentStyle": "space", "indentWidth": 2 },
-  "linter": { "enabled": true, "rules": { "recommended": true } },
+  "linter": { "enabled": true, "rules": { "preset": "none" } },
   "javascript": { "formatter": { "quoteStyle": "double" } }
 }

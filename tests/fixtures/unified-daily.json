@@ -1,0 +1,47 @@
+{
+  "daily": [
+    {
+      "period": "2026-01-09",
+      "agent": "all",
+      "inputTokens": 100,
+      "outputTokens": 50,
+      "cacheCreationTokens": 25,
+      "cacheReadTokens": 10,
+      "totalTokens": 185,
+      "totalCost": 0.12,
+      "modelsUsed": ["claude-sonnet-4-20250514"],
+      "modelBreakdowns": [],
+      "metadata": { "agents": ["claude"] },
+      "agents": [
+        {
+          "agent": "claude",
+          "inputTokens": 100,
+          "outputTokens": 50,
+          "cacheCreationTokens": 25,
+          "cacheReadTokens": 10,
+          "totalTokens": 185,
+          "totalCost": 0.12,
+          "modelsUsed": ["claude-sonnet-4-20250514"],
+          "modelBreakdowns": [
+            {
+              "modelName": "claude-sonnet-4-20250514",
+              "inputTokens": 100,
+              "outputTokens": 50,
+              "cacheCreationTokens": 25,
+              "cacheReadTokens": 10,
+              "cost": 0.12
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "totals": {
+    "inputTokens": 100,
+    "outputTokens": 50,
+    "cacheCreationTokens": 25,
+    "cacheReadTokens": 10,
+    "totalTokens": 185,
+    "totalCost": 0.12
+  }
+}

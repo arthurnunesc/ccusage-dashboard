@@ -1,0 +1,10 @@
+{
+  "$schema": "https://ccusage.com/config-schema.json",
+  "defaults": {
+    "json": true,
+    "timezone": "UTC",
+    "mode": "auto",
+    "noCost": false,
+    "order": "asc"
+  }
+}
