@@ -15,9 +15,17 @@ export class ReportRunnerError extends Error {
   }
 }
 
-/** Resolve only the native executable paired with the installed ccusage package. */
-export function resolveBinary() {
-  const binary = resolveInstalledNativeBinary();
+/** Resolve only the installed native executable. @param {() => string | undefined} [resolver] */
+export function resolveBinary(resolver = resolveInstalledNativeBinary) {
+  let binary;
+  try {
+    binary = resolver();
+  } catch {
+    throw new ReportRunnerError(
+      "BINARY_MISSING",
+      "The pinned ccusage native executable could not be resolved. Reinstall dependencies.",
+    );
+  }
   if (binary === undefined) {
     throw new ReportRunnerError(
       "BINARY_MISSING",

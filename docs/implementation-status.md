@@ -7,7 +7,7 @@
 - [x] Browser UI and automated acceptance checks
 - [x] Documentation, clean install, privacy audit
 
-Verified locally: 45 unit/HTTP/subprocess tests, 3 actual-native contract tests,
+Verified locally: 46 unit/HTTP/subprocess tests, 3 actual-native contract tests,
 and 8 browser tests. A clean frozen-lockfile install also passed. The start command was
 checked with a synthetic executable. Interruption checks left no owned PIDs or
 temporary directories. Gitleaks was unavailable; source/history pattern checks

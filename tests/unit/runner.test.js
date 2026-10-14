@@ -2,7 +2,11 @@ import { afterEach, describe, expect, test } from "bun:test";
 import { mkdtemp, readFile, rm } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
-import { ReportRunnerError, runReport } from "../../src/ccusage.js";
+import {
+  ReportRunnerError,
+  resolveBinary,
+  runReport,
+} from "../../src/ccusage.js";
 import { createFakeCcusage } from "../helpers/fake-ccusage.js";
 
 /** @type {string[]} */
@@ -85,6 +89,25 @@ async function setup() {
 }
 
 describe("runReport", () => {
+  test("native resolution failures use a distinct safe error", () => {
+    for (const resolver of [
+      () => undefined,
+      () => {
+        throw new Error("private resolver path");
+      },
+    ]) {
+      try {
+        resolveBinary(resolver);
+        throw new Error("Expected resolution failure");
+      } catch (error) {
+        expect(error).toBeInstanceOf(ReportRunnerError);
+        expect(/** @type {ReportRunnerError} */ (error).code).toBe(
+          "BINARY_MISSING",
+        );
+        expect(/** @type {Error} */ (error).message).not.toContain("private");
+      }
+    }
+  });
   test("required argument array and offline opt-in are explicit", async () => {
     const { binary, config, directory, env } = await setup();
     const file = join(directory, "arguments.json");
