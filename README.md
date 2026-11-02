@@ -62,8 +62,8 @@ The runner owns the offline flag; the shipped ccusage config does not force it,
 so the online opt-in works. A custom config that sets `offline: true` can still
 prevent refresh when that flag is omitted. Remove that setting for online use.
 For source-path discovery and native pricing overrides, use the pinned
-[ccusage configuration guide](https://github.com/ccusage/ccusage/blob/57afdc255fcbe031b0ecd7cac487f8fd7c5d531f/docs/guide/config-files.md)
-and [CLI options](https://github.com/ccusage/ccusage/blob/57afdc255fcbe031b0ecd7cac487f8fd7c5d531f/docs/guide/cli-options.md).
+[ccusage configuration guide](https://github.com/ccusage/ccusage/blob/1308c416a7da73b63463f953a51b5ae29fb784a4/docs/guide/config-files.md)
+and [CLI options](https://github.com/ccusage/ccusage/blob/1308c416a7da73b63463f953a51b5ae29fb784a4/docs/guide/cli-options.md).
 Use `CCUSAGE_CONFIG` to select your own config. Do not add credentials or alter
 agent settings for the dashboard.
 
@@ -89,8 +89,15 @@ profiles from that run, on success, failure, SIGINT, and SIGTERM.
 On Linux, browser installation may need
 `bunx --no-install playwright install --with-deps chromium`.
 CI pins the tested Bun version, uses the frozen lockfile, and runs both checks.
-Keep runtime ccusage pinned at `20.0.31`; deliberate upgrades must rerun the
+Keep runtime ccusage pinned at `20.0.33`; deliberate upgrades must rerun the
 native contract and review schema/pricing changes.
+
+This release adds upstream support for active and archived Codex `.jsonl.zst`
+rollouts, including duplicate prevention across plain and compressed copies.
+The native contract tests use synthetic logs to check both encodings against
+the daily by-agent JSON contract and dashboard normalization. No custom log
+reader is used. OpenCode compaction accounting is a separate, unresolved concern.
+See [Phase A validation](docs/ccusage-phase-a.md) for the release choice and checks.
 
 ## Troubleshooting
 

@@ -540,7 +540,7 @@ export function normalizeReport(
     stale: false,
     warnings,
     metadata: {
-      ccusageVersion: "20.0.31",
+      ccusageVersion: "20.0.33",
       offline,
       pricingMode: "auto",
       limitations: [

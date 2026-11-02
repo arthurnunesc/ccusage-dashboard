@@ -133,7 +133,7 @@ export function createApplication({
       return json({
         status: "ok",
         schemaVersion: 1,
-        ccusageVersion: "20.0.31",
+        ccusageVersion: "20.0.33",
       });
     if (assets.has(path)) {
       const [file, type] = /** @type {[string,string]} */ (assets.get(path));

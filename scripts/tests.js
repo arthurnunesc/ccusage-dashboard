@@ -7,7 +7,7 @@ const scope = process.argv[2];
 if (!["unit", "contract", "e2e"].includes(scope)) {
   throw new Error("Expected test scope: unit, contract, or e2e.");
 }
-const root = await mkdtemp(join(tmpdir(), "ccusage-tests-"));
+let root = "";
 /** @type {import('node:child_process').ChildProcess | undefined} */
 let child;
 let interrupted = false;
@@ -76,7 +76,7 @@ async function cleanup() {
   if (cleaned) return;
   cleaned = true;
   stopOwnedGroup();
-  await rm(root, { recursive: true, force: true });
+  if (root) await rm(root, { recursive: true, force: true });
 }
 const interrupt = () => {
   interrupted = true;
@@ -85,6 +85,7 @@ const interrupt = () => {
 process.once("SIGINT", interrupt);
 process.once("SIGTERM", interrupt);
 try {
+  root = await mkdtemp(join(tmpdir(), "ccusage-tests-"));
   for (const name of ["home", "tmp", "config", "data", "cache"])
     await mkdir(join(root, name));
   const browsers =

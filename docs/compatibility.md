@@ -1,8 +1,11 @@
 # Compatibility and data contract
 
-Runtime: **ccusage 20.0.31**, source commit
-`57afdc255fcbe031b0ecd7cac487f8fd7c5d531f` (`v20.0.31`). This is a
+Runtime: **ccusage 20.0.33**, source commit
+`1308c416a7da73b63463f953a51b5ae29fb784a4` (`v20.0.33`). This is a
 **thin wrapper with limited parity**, not an identical replacement pricing engine.
+
+The real-binary contract tests verify plain/compressed Codex parity and duplicate
+prevention for active and archived rollouts. See [Phase A validation](ccusage-phase-a.md).
 
 ## Approved parity checklist
 
