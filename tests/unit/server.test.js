@@ -158,3 +158,75 @@ test("initial runner failure returns safe error without an empty snapshot", asyn
     await app.close();
   }
 });
+
+test("explicit hosts replace defaults for every route and retain refresh protections", async () => {
+  const snapshot = normalizeReport({
+    daily: [],
+    totals: {
+      inputTokens: 0,
+      outputTokens: 0,
+      cacheCreationTokens: 0,
+      cacheReadTokens: 0,
+      totalTokens: 0,
+      totalCost: 0,
+    },
+  });
+  const app = createApplication({
+    config: loadConfig({
+      PORT: "0",
+      CCUSAGE_ALLOWED_HOSTS: "dashboard.test:8766",
+    }),
+    runner: async () => snapshot,
+  });
+  try {
+    const server = app.start();
+    const url = `http://127.0.0.1:${server.port}`;
+    const host = "dashboard.test:8766";
+    for (const path of [
+      "/",
+      "/api/health",
+      "/api/usage",
+      "/api/refresh",
+      "/missing",
+    ]) {
+      const response = await fetch(url + path);
+      expect(response.status).toBe(403);
+      expect(response.headers.get("cache-control")).toBe("no-store");
+      expect(response.headers.get("content-security-policy")).toContain(
+        "default-src 'none'",
+      );
+    }
+    expect(
+      (await fetch(`${url}/api/health`, { headers: { Host: host } })).status,
+    ).toBe(200);
+    const refresh = (/** @type {Record<string, string>} */ headers) =>
+      fetch(`${url}/api/refresh`, {
+        method: "POST",
+        headers: { Host: host, ...headers },
+      });
+    expect((await refresh({ "X-ccusage-refresh": "1" })).status).toBe(403);
+    expect(
+      (
+        await refresh({
+          Origin: "http://evil.test:8766",
+          "X-ccusage-refresh": "1",
+        })
+      ).status,
+    ).toBe(403);
+    expect((await refresh({ Origin: `http://${host}` })).status).toBe(403);
+    expect(
+      (await refresh({ Origin: `http://${host}`, "X-ccusage-refresh": "1" }))
+        .status,
+    ).toBe(200);
+    expect(
+      (
+        await fetch(`${url}/api/health`, {
+          method: "POST",
+          headers: { Host: host },
+        })
+      ).status,
+    ).toBe(405);
+  } finally {
+    await app.close();
+  }
+});

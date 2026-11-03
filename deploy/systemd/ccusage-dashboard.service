@@ -1,0 +1,20 @@
+[Unit]
+Description=ccusage dashboard
+StartLimitIntervalSec=60
+StartLimitBurst=5
+
+[Service]
+Type=simple
+EnvironmentFile=%h/.config/ccusage-dashboard/dashboard.env
+Environment=HOME=%h
+Environment=PATH=/usr/local/bin:/usr/bin:/bin
+ExecStart=/usr/bin/python3 %h/.local/lib/ccusage-dashboard/launch.py
+UMask=0077
+Restart=on-failure
+RestartSec=5s
+KillMode=control-group
+TimeoutStopSec=30s
+NoNewPrivileges=true
+
+[Install]
+WantedBy=default.target

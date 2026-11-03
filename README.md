@@ -18,6 +18,12 @@ Open **http://127.0.0.1:8766**. The server binds to 127.0.0.1 only. Use
 `bun run dev` for development reload. The first report can take time on a large
 history. Controls filter the loaded report; they do not start new scans.
 
+For an explicit private LAN/WireGuard deployment with native systemd operation,
+CI-gated GitHub updates, and rollback, see the
+[native deployment runbook](docs/native-deployment.md). Deployment code and unit
+templates live in this repository; private data and configuration stay on the
+server. Nothing is installed or exposed merely by cloning the repository.
+
 ## What it shows
 
 - Six lifetime, projected 30-day, and recent active-day summary cards.
@@ -44,6 +50,8 @@ source paths in your own ignored configuration, never in committed files.
 | Variable | Default | Meaning |
 | --- | --- | --- |
 | `PORT` | `8766` | Local port, 0–65535; 0 asks the OS for an ephemeral port. |
+| `CCUSAGE_BIND_ADDRESS` | `127.0.0.1` | Explicit unicast IPv4 address. Non-loopback requires a fixed nonzero port and explicit allowed hosts. |
+| `CCUSAGE_ALLOWED_HOSTS` | Loopback/localhost with actual port | Comma-separated exact `host:port` values, replacing defaults. Non-loopback entries must use `PORT`. Not authentication. |
 | `CCUSAGE_CONFIG` | Project `ccusage.config.json` | Resolved config file path. |
 | `CCUSAGE_OFFLINE` | `true` | Use cached/bundled pricing without network pricing refresh. Only `true`/`false` accepted. |
 | `CCUSAGE_CACHE_TTL_MS` | `60000` | Reload on the next request after this age; no polling. |
@@ -72,6 +80,7 @@ agent settings for the dashboard.
 ```sh
 bun install --frozen-lockfile
 bun run check
+bun --no-env-file scripts/tests.js deploy
 bunx --no-install playwright install chromium
 bun run test:e2e
 ```
@@ -89,6 +98,8 @@ profiles from that run, on success, failure, SIGINT, and SIGTERM.
 On Linux, browser installation may need
 `bunx --no-install playwright install --with-deps chromium`.
 CI pins the tested Bun version, uses the frozen lockfile, and runs both checks.
+CI also runs the isolated Python deployment tests; Python 3 is required for that
+scope, not for local dashboard operation.
 Keep runtime ccusage pinned at `20.0.33`; deliberate upgrades must rerun the
 native contract and review schema/pricing changes.
 
@@ -111,9 +122,10 @@ See [Phase A validation](docs/ccusage-phase-a.md) for the release choice and che
 - **Refresh failure:** old data stays visible and is marked stale. The last
   successful generation time does not change. Fix the source/config issue and
   select Refresh.
-- **Blocked refresh:** use the direct localhost URL, not a reverse proxy or
-  remote hostname. Host and same-origin checks intentionally reject foreign
-  requests. No permissive CORS is provided.
+- **Blocked refresh:** use the direct localhost URL, or an explicitly configured
+  private address with a matching Host and HTTP Origin. Reverse proxies are not
+  supported. Host and same-origin checks intentionally reject foreign requests.
+  No permissive CORS is provided.
 - **Package release-age policy blocks the initial install:** the exact required
   versions were installed with `bun install --minimum-release-age 0`. Review
   your package policy before using that explicit exception.

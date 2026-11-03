@@ -4,8 +4,8 @@ import { homedir, tmpdir } from "node:os";
 import { join } from "node:path";
 
 const scope = process.argv[2];
-if (!["unit", "contract", "e2e"].includes(scope)) {
-  throw new Error("Expected test scope: unit, contract, or e2e.");
+if (!["unit", "contract", "e2e", "deploy"].includes(scope)) {
+  throw new Error("Expected test scope: unit, contract, e2e, or deploy.");
 }
 let root = "";
 /** @type {import('node:child_process').ChildProcess | undefined} */
@@ -94,25 +94,40 @@ try {
       ? join(homedir(), "Library", "Caches", "ms-playwright")
       : join(homedir(), ".cache", "ms-playwright"));
   const args =
-    scope === "e2e"
-      ? ["node_modules/@playwright/test/cli.js", "test"]
-      : ["test", `tests/${scope}`];
+    scope === "deploy"
+      ? [
+          "-B",
+          "-m",
+          "unittest",
+          "discover",
+          "-s",
+          "tests/deploy",
+          "-p",
+          "test_*.py",
+        ]
+      : scope === "e2e"
+        ? ["node_modules/@playwright/test/cli.js", "test"]
+        : ["test", `tests/${scope}`];
   if (interrupted) throw new Error("Test run interrupted before startup.");
-  child = spawn(process.execPath, ["--no-env-file", ...args], {
-    detached: true,
-    stdio: "inherit",
-    env: {
-      PATH: process.env.PATH ?? "",
-      HOME: join(root, "home"),
-      TMPDIR: join(root, "tmp"),
-      XDG_CONFIG_HOME: join(root, "config"),
-      XDG_DATA_HOME: join(root, "data"),
-      XDG_CACHE_HOME: join(root, "cache"),
-      PLAYWRIGHT_BROWSERS_PATH: browsers,
-      CI: process.env.CI ? "1" : "",
-      TZ: "UTC",
+  child = spawn(
+    scope === "deploy" ? "python3" : process.execPath,
+    scope === "deploy" ? args : ["--no-env-file", ...args],
+    {
+      detached: true,
+      stdio: "inherit",
+      env: {
+        PATH: process.env.PATH ?? "",
+        HOME: join(root, "home"),
+        TMPDIR: join(root, "tmp"),
+        XDG_CONFIG_HOME: join(root, "config"),
+        XDG_DATA_HOME: join(root, "data"),
+        XDG_CACHE_HOME: join(root, "cache"),
+        PLAYWRIGHT_BROWSERS_PATH: browsers,
+        CI: process.env.CI ? "1" : "",
+        TZ: "UTC",
+      },
     },
-  });
+  );
   const code = await new Promise((resolve, reject) => {
     child?.once("error", reject);
     child?.once("close", (code) => resolve(code ?? 1));

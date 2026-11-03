@@ -1,5 +1,7 @@
 export interface Config {
   port: number;
+  bindAddress?: string;
+  allowedHosts?: string[];
   configPath: string;
   offline: boolean;
   cacheTtlMs: number;

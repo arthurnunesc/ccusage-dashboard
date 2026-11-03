@@ -94,7 +94,10 @@ export function createApplication({
   async function fetchHandler(request) {
     const url = new URL(request.url);
     const port = server?.port ?? config.port;
-    const hosts = [`127.0.0.1:${port}`, `localhost:${port}`];
+    const hosts = config.allowedHosts ?? [
+      `127.0.0.1:${port}`,
+      `localhost:${port}`,
+    ];
     if (!hosts.includes(request.headers.get("host") ?? ""))
       return json(
         { error: { code: "FORBIDDEN", message: "Invalid local Host." } },
@@ -157,7 +160,7 @@ export function createApplication({
     start() {
       if (server) throw new Error("Application already started.");
       server = Bun.serve({
-        hostname: "127.0.0.1",
+        hostname: config.bindAddress,
         port: config.port,
         fetch: fetchHandler,
       });
@@ -174,7 +177,7 @@ export function createApplication({
 if (import.meta.main) {
   const app = createApplication();
   const server = app.start();
-  console.log(`Coding Agent Usage: http://127.0.0.1:${server.port}`);
+  console.log(`Coding Agent Usage: http://${server.hostname}:${server.port}`);
   let closing = false;
   const close = async () => {
     if (closing) return;

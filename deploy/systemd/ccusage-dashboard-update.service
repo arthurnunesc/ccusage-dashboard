@@ -1,0 +1,14 @@
+[Unit]
+Description=Update ccusage dashboard
+
+[Service]
+Type=oneshot
+TimeoutStartSec=30min
+TimeoutStopSec=30s
+KillMode=control-group
+EnvironmentFile=%h/.config/ccusage-dashboard/dashboard.env
+Environment=HOME=%h
+Environment=PATH=/usr/local/bin:/usr/bin:/bin
+ExecStart=/usr/bin/python3 %h/.local/lib/ccusage-dashboard/manage.py update
+UMask=0077
+NoNewPrivileges=true

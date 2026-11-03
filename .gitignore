@@ -19,3 +19,5 @@ playwright-report/
 .impeccable/review/
 .DS_Store
 .tmp/
+__pycache__/
+*.pyc
