@@ -74,7 +74,7 @@ def validate_snapshot(value):
     except ValueError:
         _invalid()
     metadata = value.get("metadata")
-    if (not isinstance(metadata, dict) or metadata.get("ccusageVersion") != "20.0.33"
+    if (not isinstance(metadata, dict) or metadata.get("ccusageVersion") != "20.0.49"
             or type(metadata.get("offline")) is not bool
             or metadata.get("pricingMode") != "auto"
             or not _strings(metadata.get("limitations"))):

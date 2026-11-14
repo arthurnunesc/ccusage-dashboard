@@ -14,7 +14,7 @@
     "check": "bun run typecheck && bun run lint && bun run test && bun run test:contract"
   },
   "dependencies": {
-    "ccusage": "20.0.33"
+    "ccusage": "20.0.49"
   },
   "devDependencies": {
     "typescript": "7.0.2",

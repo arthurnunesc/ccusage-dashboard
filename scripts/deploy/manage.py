@@ -416,7 +416,7 @@ class Deployer:
             if not VERSION.fullmatch(version):
                 raise DeploymentError("Release requires an exact Bun version")
             package = json.loads((stage / "package.json").read_text())
-            if package.get("dependencies", {}).get("ccusage") != "20.0.33":
+            if package.get("dependencies", {}).get("ccusage") != "20.0.49":
                 raise DeploymentError("ccusage pin changed; update the reviewed deployment contract first")
             bun = ensure_runtime(self.base, version, self.env)
             self.run([str(bun), "install", "--no-env-file", "--production", "--frozen-lockfile"],
@@ -493,7 +493,7 @@ class Deployer:
                 if (not isinstance(health, dict)
                         or pid <= 0 or Path(f"/proc/{pid}/cwd").resolve() != expected
                         or health.get("status") != "ok" or health.get("schemaVersion") != 1
-                        or health.get("ccusageVersion") != "20.0.33"):
+                        or health.get("ccusageVersion") != "20.0.49"):
                     raise DeploymentError("Running process/health does not match selected release")
                 break
             except (OSError, ValueError, DeploymentError):

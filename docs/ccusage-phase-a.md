@@ -83,6 +83,8 @@ Local totals are time-specific diagnostics, not fixture expectations. The older
 
 This verifies the required JSON and normalization contracts on this platform;
 it does not prove complete accounting for all retained history or all platforms.
-The upstream compression fix is Codex-specific. Later upstream fixes are not
-included. OpenCode compaction accounting remains a separate Phase B concern;
-no Phase B fix, issue or PR was made.
+The upstream compression fix described in this historical Phase A validation is
+Codex-specific. Later upstream fixes are not included in the validation above.
+Since ccusage 20.0.49, completed OpenCode v2 compaction rows are counted
+(ccusage #2050), and the unified report counts Claude Agent turns once under
+Claude Code (#2007, #2022). The dashboard now pins 20.0.49.

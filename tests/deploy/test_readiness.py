@@ -11,7 +11,7 @@ from readiness import MAX_SAFE, validate_snapshot
 def snapshot():
     return {
         'schemaVersion': 1, 'stale': False, 'generatedAt': '2026-01-01T12:00:00Z',
-        'warnings': [], 'metadata': {'ccusageVersion': '20.0.33', 'offline': False,
+        'warnings': [], 'metadata': {'ccusageVersion': '20.0.49', 'offline': False,
                                      'pricingMode': 'auto', 'limitations': []},
         'days': [],
     }
