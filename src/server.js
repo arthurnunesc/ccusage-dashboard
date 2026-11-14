@@ -136,7 +136,7 @@ export function createApplication({
       return json({
         status: "ok",
         schemaVersion: 1,
-        ccusageVersion: "20.0.33",
+        ccusageVersion: "20.0.49",
       });
     if (assets.has(path)) {
       const [file, type] = /** @type {[string,string]} */ (assets.get(path));

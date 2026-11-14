@@ -100,14 +100,16 @@ On Linux, browser installation may need
 CI pins the tested Bun version, uses the frozen lockfile, and runs both checks.
 CI also runs the isolated Python deployment tests; Python 3 is required for that
 scope, not for local dashboard operation.
-Keep runtime ccusage pinned at `20.0.33`; deliberate upgrades must rerun the
+Keep runtime ccusage pinned at `20.0.49`; deliberate upgrades must rerun the
 native contract and review schema/pricing changes.
 
 This release adds upstream support for active and archived Codex `.jsonl.zst`
 rollouts, including duplicate prevention across plain and compressed copies.
 The native contract tests use synthetic logs to check both encodings against
 the daily by-agent JSON contract and dashboard normalization. No custom log
-reader is used. OpenCode compaction accounting is a separate, unresolved concern.
+reader is used. ccusage 20.0.49+ counts completed OpenCode v2 compaction rows
+(#2050), and the unified report counts Claude Agent turns once under Claude Code
+(#2007, #2022).
 See [Phase A validation](docs/ccusage-phase-a.md) for the release choice and checks.
 
 ## Troubleshooting

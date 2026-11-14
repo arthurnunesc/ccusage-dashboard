@@ -51,7 +51,7 @@ examples, never real secrets or private source paths.
   Refresh also requires an exact HTTP Origin match and `X-ccusage-refresh: 1`.
 - `GET /api/health` already exists. It checks HTTP liveness, **not** whether a
   native usage scan succeeds. `GET /api/usage` is needed for readiness.
-- `ccusage` is pinned to `20.0.33`. Workflow `Checks` in
+- `ccusage` is pinned to `20.0.49`. Workflow `Checks` in
   `.github/workflows/ci.yml` pins Bun `1.3.11` and runs both `bun run check` and
   E2E. `check` alone does not include E2E.
 - Compatibility and accounting completeness with the upgraded native agents
@@ -132,7 +132,7 @@ Proposed layout, all owned by `agent`:
 Implementation rules:
 
 - Add `.bun-version` containing `1.3.11`; make CI read it with
-  `setup-bun`'s `bun-version-file`. Keep `ccusage` at `20.0.33`. Dependency or
+  `setup-bun`'s `bun-version-file`. Keep `ccusage` at `20.0.49`. Dependency or
   runtime upgrades remain separate, deliberate changes.
 - After approval, install the pinned Bun in the dashboard-specific runtime
   directory. Verify the downloaded release and `bun --version`; do not replace

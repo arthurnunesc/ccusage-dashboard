@@ -103,13 +103,13 @@ async function writeRollout(codex, path, compressed, later = false) {
   await writeFile(destination, compressed ? Bun.zstdCompressSync(data) : data);
 }
 
-describe("installed ccusage 20.0.33 native contract", () => {
+describe("installed ccusage 20.0.49 native contract", () => {
   test("the installed wrapper and native executable have the exact pinned version", async () => {
     const { config, env } = await isolatedSource(false);
     const pkg = await Bun.file(
       new URL("../../node_modules/ccusage/package.json", import.meta.url),
     ).json();
-    expect(pkg.version).toBe("20.0.33");
+    expect(pkg.version).toBe("20.0.49");
     const child = Bun.spawn([config.binary, "--version"], {
       env,
       stdout: "pipe",
@@ -124,7 +124,7 @@ describe("installed ccusage 20.0.33 native contract", () => {
         child.exited,
       ]);
       expect(code).toBe(0);
-      expect(stdout).toContain("20.0.33");
+      expect(stdout).toContain("20.0.49");
     } finally {
       clearTimeout(timer);
       child.kill("SIGKILL");

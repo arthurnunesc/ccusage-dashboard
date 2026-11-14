@@ -321,7 +321,7 @@ class DeploymentTest(unittest.TestCase):
         data = io.BytesIO()
         with tarfile.open(fileobj=data, mode='w') as tar:
             for name, body in [('.bun-version', b'1.3.11\n'),
-                               ('package.json', b'{"dependencies":{"ccusage":"20.0.33"}}')]:
+                               ('package.json', b'{"dependencies":{"ccusage":"20.0.49"}}')]:
                 info = tarfile.TarInfo(name)
                 info.size = len(body)
                 tar.addfile(info, io.BytesIO(body))
@@ -342,7 +342,7 @@ class DeploymentTest(unittest.TestCase):
             directory.mode = 0o775
             tar.addfile(directory)
             for name, body in [('.bun-version', b'1.3.11\n'),
-                               ('package.json', b'{"dependencies":{"ccusage":"20.0.33"}}'),
+                               ('package.json', b'{"dependencies":{"ccusage":"20.0.49"}}'),
                                ('src/server.js', b'// server\n')]:
                 info = tarfile.TarInfo(name)
                 info.mode = 0o664
@@ -514,10 +514,10 @@ class DeploymentTest(unittest.TestCase):
                 return expected
             return original_resolve(path, *args, **kwargs)
 
-        health = {'status': 'ok', 'schemaVersion': 1, 'ccusageVersion': '20.0.33'}
+        health = {'status': 'ok', 'schemaVersion': 1, 'ccusageVersion': '20.0.49'}
         valid = {'schemaVersion': 1, 'stale': False, 'days': [],
                  'generatedAt': '2026-11-03T00:00:00.000Z', 'warnings': [],
-                 'metadata': {'ccusageVersion': '20.0.33', 'offline': True,
+                 'metadata': {'ccusageVersion': '20.0.49', 'offline': True,
                               'pricingMode': 'auto', 'limitations': []}}
         self.d.run.side_effect = None
         self.d.run.return_value = subprocess.CompletedProcess([], 0, b'123')

@@ -1,8 +1,14 @@
 # Compatibility and data contract
 
-Runtime: **ccusage 20.0.33**, source commit
-`1308c416a7da73b63463f953a51b5ae29fb784a4` (`v20.0.33`). This is a
+Runtime: **ccusage 20.0.49**, source commit
+`d1d95c99406709d51722b3af82cd32149402c76a` (`v20.0.49`). This is a
 **thin wrapper with limited parity**, not an identical replacement pricing engine.
+
+Since 20.0.49, completed OpenCode v2 compaction rows are counted (ccusage
+[#2050](https://github.com/ccusage/ccusage/pull/2050)). The unified report also
+counts Claude Agent turns once, under Claude Code (ccusage
+[#2007](https://github.com/ccusage/ccusage/issues/2007),
+[#2022](https://github.com/ccusage/ccusage/issues/2022)).
 
 The real-binary contract tests verify plain/compressed Codex parity and duplicate
 prevention for active and archived rollouts. See [Phase A validation](ccusage-phase-a.md).
