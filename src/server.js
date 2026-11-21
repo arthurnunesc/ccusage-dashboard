@@ -55,13 +55,24 @@ function safeError(error) {
 }
 
 /**
+ * HTTP idle timeout in seconds for scan routes (`/api/usage`, `/api/refresh`).
+ * Covers the configured subprocess timeout plus headroom for JSON parsing and
+ * normalization without raising the global `idleTimeout` for fast routes.
+ * @param {number} timeoutMs
+ */
+export function scanIdleTimeoutSeconds(timeoutMs) {
+  return Math.ceil(timeoutMs / 1000) + 15;
+}
+
+/**
  * Imports do not start listeners or scan logs. Tests inject synthetic runners.
- * @param {{config?: ReturnType<typeof loadConfig>, runner?: (signal: AbortSignal) => Promise<ReturnType<typeof normalizeReport>>, clock?: () => number}} options
+ * @param {{config?: ReturnType<typeof loadConfig>, runner?: (signal: AbortSignal) => Promise<ReturnType<typeof normalizeReport>>, clock?: () => number, idleTimeout?: number}} options
  */
 export function createApplication({
   config = loadConfig(),
   runner,
   clock = Date.now,
+  idleTimeout,
 } = {}) {
   const cache = createSnapshotCache({
     ttlMs: config.cacheTtlMs,
@@ -144,6 +155,7 @@ export function createApplication({
         headers: { ...securityHeaders, "Content-Type": type },
       });
     }
+    server?.timeout(request, scanIdleTimeoutSeconds(config.timeoutMs));
     try {
       if (isRefresh) return json(payload(await cache.refresh()));
       const result = await cache.load();
@@ -162,6 +174,7 @@ export function createApplication({
       server = Bun.serve({
         hostname: config.bindAddress,
         port: config.port,
+        ...(idleTimeout === undefined ? {} : { idleTimeout }),
         fetch: fetchHandler,
       });
       return server;

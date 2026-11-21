@@ -47,7 +47,7 @@ test("application shutdown terminates an actual in-flight child and listener", a
   }
 });
 
-import { createApplication } from "../../src/server.js";
+import { createApplication, scanIdleTimeoutSeconds } from "../../src/server.js";
 
 test("HTTP routes, isolated single flight, and rebinding/CSRF protection", async () => {
   let calls = 0;
@@ -230,3 +230,43 @@ test("explicit hosts replace defaults for every route and retain refresh protect
     await app.close();
   }
 });
+
+test("scan routes extend Bun request idle timeout beyond the global idleTimeout", async () => {
+  expect(scanIdleTimeoutSeconds(1)).toBe(16);
+  expect(scanIdleTimeoutSeconds(120_000)).toBe(135);
+  expect(scanIdleTimeoutSeconds(300_000)).toBe(315);
+  const snapshot = normalizeReport({
+    daily: [],
+    totals: {
+      inputTokens: 0,
+      outputTokens: 0,
+      cacheCreationTokens: 0,
+      cacheReadTokens: 0,
+      totalTokens: 0,
+      totalCost: 0,
+    },
+  });
+  const app = createApplication({
+    config: { ...loadConfig({}), port: 0 },
+    idleTimeout: 1,
+    runner: async () => {
+      await Bun.sleep(5_000);
+      return snapshot;
+    },
+  });
+  try {
+    const server = app.start();
+    const origin = `http://127.0.0.1:${server.port}`;
+    const usageRequest = fetch(`${origin}/api/usage`);
+    await Bun.sleep(50);
+    const refreshRequest = fetch(`${origin}/api/refresh`, {
+      method: "POST",
+      headers: { Origin: origin, "X-ccusage-refresh": "1" },
+    });
+    const [usage, refresh] = await Promise.all([usageRequest, refreshRequest]);
+    expect(usage.status).toBe(200);
+    expect(refresh.status).toBe(200);
+  } finally {
+    await app.close();
+  }
+}, 15_000);
